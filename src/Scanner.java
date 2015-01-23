@@ -41,9 +41,34 @@ public class Scanner {
 		//compare ascii values
 		//return corresponding class
 		if ((int)c >= (int)'0'&&(int)c <= (int)'9')
-			return 1;
+		{
+			if((int)c == (int)'0')
+				return 0;
+			else if ((int)c >= (int)'1'&&(int)c <= (int)'7')
+				return 1;
+			else if ((int)c >= (int)'1'&&(int)c <= (int)'9')
+				return 2;
+			else
+				return -1;
+		}
+		else if ((int)c==(int)'.')
+			return 3;
+		else if ((int)c >= (int)'A' && (int)c <= (int)'Z')
+		{
+			if((int)c == (int)'X')
+				return 5;
+			else
+				return 6;
+		}
+		else if((int)c >= (int)'a' && (int)c >='z')
+		{
+			if((int)c == (int)'x')
+				return 4;
+			else
+				return 7;
+		}
 		else
-			return 0;
+			return -1;
 	}
 	//makes 2d array for referencing next states
 	public static void makeNextState()
