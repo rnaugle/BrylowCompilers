@@ -1,0 +1,16 @@
+<
+>
+0
+==
+!=
+"string"
+=
+34.1
+synchronized
+Xinu.print
+Xinu.println
+Xinu.readInt
+Xinu.threadCreate
+Xinu.yield
+Xinu.sleep
+}
