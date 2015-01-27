@@ -1,29 +1,210 @@
 
 public class Scanner {
 
-	static int[][] nextState = new int[95][50];
+	//static int[][] nextState = new int[95][50];
+	static int[][] nextState;
+	static String[] states;
 
 	public static void main(String[] args) {
 		java.io.BufferedReader reader;
 		makeNextState();
+		stateName();
 
 		try{
+			//empty into array
 			reader = new java.io.BufferedReader(new java.io.FileReader(args[0]));
-			int c = reader.read();
+			int fileSize = 0;
+			while(reader.read()!= -1){
+				fileSize++;
+			}
+			int[] file = new int[fileSize];
+			reader.close();
+			reader = new java.io.BufferedReader(new java.io.FileReader(args[0]));
+			int index = 0;
+			int ch;
+			while((ch = reader.read())!= -1){
+				file[index] = ch;
+			}
+			reader.close();
+			
+			
+			int counter = 0;
+			int c = file[counter];
+			boolean peeked = false;
+			char peek = ' ';
+			int state;
+			boolean done;
+			String token_value;
+			int charClass;
+			int lastFinalState;
 
-			while (c  != -1)
+			while (c  != fileSize)
 			{
 				//start at state 0 for each token with a false flag and empty string
-				int state  = 0;
-				boolean done = false;
-				String token_value = "";
-				int charClass = nextState.length;
-				int lastFinalState = 0;
+				
+				state  = 0;
+				peeked = false;
+				done = false;
+				token_value = "";
+				charClass = nextState.length;
+				lastFinalState = 0;
+				int sinceLastFinal = 0;
 
 				while (!done)
 				{
+					if(peeked){
+						//c = peek;
+					}else{
+						//c = reader.read();
+						//counter++;
+					}
 					char cc = (char)c;
+					token_value+=cc;
 					charClass = getCharClass(cc);
+					state = nextState[state][charClass];
+					if(state == 63 || state == 65 || state == 72 || state == 84 || state == 89 ||state == 94){
+						//peek = read
+						//if peeked character is letter or number
+						//then reader.reset
+						//else last final state = charClass, put peeked character back
+						if(counter+1 >= fileSize){
+							System.out.println(states[state]);
+							done = true;
+							counter++;
+							token_value = "";
+							sinceLastFinal = 0;
+						}else if(file[counter+1] > (int)'A' && file[counter+1] < (int)'Z'){
+							state = lastFinalState;
+							System.out.println(states[state] +  token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+							
+							
+						}else if(file[counter+1] > (int)'a' && file[counter+1] < (int)'z'){
+							state = lastFinalState;
+							System.out.println(states[state] +  token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+							
+						}else if(file[counter+1] > (int)'0' && file[counter+1]  <(int)'9'){
+							state = lastFinalState;
+							System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+						}else if(file[counter+1] == (int)'_'){
+							state = lastFinalState;
+							System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+						}else{
+							lastFinalState = state;
+							counter++;
+							sinceLastFinal++;
+						}
+						
+						//peeked = true;
+						
+					}else if(state == 60){
+						if(counter+1 >= fileSize){
+							System.out.println(states[state]);
+							done = true;
+							counter++;
+							token_value = "";
+						}else if(file[counter+1] < (int)'l' && file[counter+1] < (int)'i'){
+							counter++;
+							sinceLastFinal++;
+						}else if(file[counter+1] > (int)'A' && file[counter+1] < (int)'Z'){
+							state = lastFinalState;
+							System.out.println(states[state] +  token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							sinceLastFinal = 0;
+							counter++;
+							token_value = "";
+							done = true;
+							
+							
+						}else if(file[counter+1] > (int)'a' && file[counter+1] < (int)'z'){
+							state = lastFinalState;
+							System.out.println(states[state] +  token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+							
+						}else if(file[counter+1] > (int)'0' && file[counter+1]  <(int)'9'){
+							state = lastFinalState;
+							System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+						}else if(file[counter+1] == (int)'_'){
+							state = lastFinalState;
+							System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+							state = 0;
+							counter-=sinceLastFinal;
+							counter++;
+							sinceLastFinal = 0;
+							token_value = "";
+							done = true;
+						}else{
+							lastFinalState = state;
+							counter++;
+							sinceLastFinal++;
+						}
+						
+						
+					
+					}else if(state == -1){
+						state = lastFinalState;
+						if(states[state].substring(states[state].length()-1,states[state].length()).equals("(")){
+							System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
+						}else{
+							System.out.println(states[state]);
+						}
+						counter-=sinceLastFinal;
+						state=0;
+						token_value = "";
+						done = true;
+						
+						
+						
+						
+					//}else if(state == 43 || state == 44 || state == 45){
+					//cant remember why i made this
+						//this may be for spaces, but these are corresponding columns,not cases
+						
+					//if state is final
+					}else if(!states[state].equals("")){
+						lastFinalState = state;
+						counter++;
+						sinceLastFinal++;
+						
+					}else{
+						counter++;
+						sinceLastFinal++;
+					}
 				}
 
 				//TODO: initialize output stream
@@ -35,6 +216,8 @@ public class Scanner {
 			System.out.println("Error reading file.");}
 
 	}
+	
+
 
 	public static int getCharClass(char c)
 	{ 
@@ -152,15 +335,156 @@ public class Scanner {
 			return 48;
 		}else if((int)c == (int)'>'){
 			return 49;
+		}else if((int)c == (int)'_'){
+			return 50;
 		}
+	
 		else
 			return -1;
 	}
+	
+	public static void stateName(){
+		   
+		states = new String[]
+				//0
+				{"","INTEGER_LITERAL", "DECIMAL_LITERAL","BWAND","BWOR","XOR", "COMP", };
+	}
+	
 	//makes 2d array for referencing next states
 	public static void makeNextState()
 	{
 		//TODO create the array with next state references
-		this.nextState[0]={24,1,1,-1,39,28,39}
+		//-2 Illegal Token
+		//-3 Invalid character in number.
+		//this.nextState[0]=
+		nextState = new int[][]{
+//0		 0	1-9	1-7  .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p  r   s   t   u    w  y   z  a-f  ,   &  |  ^  ~  +   -
+		{24, 1,  1, 23, 39, 28, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 36, 39, 39, 39, 40, 39, 39, 39, 39, 39, 39, 22, 3, 4, 5, 6, 9, 10, 
+//			*   /   !   (    )   [   ]   {   } \n     \t  =   "   <   >  _
+			11, 12, 15, 16, 17, 18, 19, 20, 21, 0, 0, 0, 32, 34, 39, 30, 95},
+			
+//1		 0	1-9	1-7 .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p  r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{1, 1,  1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3},
+			
+//2		 0	1-9	1-7 .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p  r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{2, 2,  2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+		
+//3		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &  |  ^  ~  +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  7, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//4		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  8, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//5		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//6		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//7		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//8		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//9		 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//10	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//11	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//12	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//13	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, 13, 13, 13, 13, 13},
+			
+//14	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	   	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//15	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+	    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 31, -1, -1, -1},
+			
+//16	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//17	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+				
+//18	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+					
+//19	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+						
+//20	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+							
+//21	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+								
+//22	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+
+//23	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//			*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+//24	 0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
+		   	{-1, 26, -1, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+//				*   /   !   (    )   [   ]   {   }   \n  _  \t   =   "   <   >
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+			
+
+		};
 		
 	}
 
