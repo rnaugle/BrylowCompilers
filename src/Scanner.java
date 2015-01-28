@@ -76,6 +76,8 @@ public class Scanner {
 					char cc = (char)c;
 					token_value+=cc;
 					charClass = getCharClass(cc);
+					//unspecified characters throw a general error
+					//unless in a string or comment
 					if(charClass == -1){
 						if(state == 13 || state == 95){
 							;
@@ -472,7 +474,7 @@ public class Scanner {
 	}
 	
 	public static String isRes(String s){
-		if(s.equals("class") || s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while")){
+		if(s.equals("class") || s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while") || s.equals("String")){
 			return s.toUpperCase();
 		}else{
 			return "";
@@ -487,7 +489,7 @@ public class Scanner {
 				{"","INTEGER_LITERAL(", "DECIMAL_LITERAL(","BWAND","BWOR","XOR", "COMP", "AND", "OR", "PLUS", "MINUS", "STAR", "FORWARDSLASH", "", "", "BANG", "LPAREN", "RPAREN", "LSQUARE", "RSQUARE", "LBRACE",
 				"RBRACE", "COMMA", "PERIOD", "INTEGER_LITERAL(", "", "OCTAL_LITERAL(", "HEXADECIMAL_LITERAL(", "ID(", "LESSTHAN", "GREATERTHAN", "NOTEQUAL", "ASSIGN", "EQUAL", "", "STRING_LITERAL(", 
 				"ID(", "ID(", "NEW", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "ID(", "SYNCHRONIZED", "ID(", "ID(", "ID(", "", "", "", "", "", "PRINT", "", "", "PRINTLN"
-				, "", "PRINTINT", "", "", "", "", "", "", "READINT", "", "", "", "", "", "", "", "", "", "", "", "THREADCREATE", "", "", "", "", "YIELD", "", "", "", "", "SLEEP", "", "", "","Illegal Token", "Invalid character in number."
+				, "", "PRINTINT", "", "", "", "", "", "", "READINT", "", "", "", "", "", "", "", "", "", "", "", "THREADCREATE", "", "", "", "", "YIELD", "", "", "", "", "SLEEP", "", "", "","Illegal token.", "Invalid character in number."
 				, "Invalid character in hex number.", "Invalid character in octal number.","SEMICOLON", "String not terminated at end of line.", "Comment not terminated at end of input."};
 		}
 	
@@ -623,7 +625,7 @@ public class Scanner {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 			
 //24	0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
-		{26, 26, -1, 2, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+		{26, 26, -1, 2, 25, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 //		*   /   !   (    )   [   ]   {   }   \n  [space]  \t   =   "   <   > _
 		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 99, -1},
 				
