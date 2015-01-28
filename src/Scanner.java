@@ -77,7 +77,11 @@ public class Scanner {
 					token_value+=cc;
 					charClass = getCharClass(cc);
 					if(charClass == -1){
-						state = 98;
+						if(state == 13 || state == 95){
+							;
+						}else{
+							state = 98;
+						}
 					}else{
 						state = nextState[state][charClass];
 					}
