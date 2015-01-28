@@ -78,7 +78,14 @@ public class Scanner {
 					//unspecified characters throw a general error
 					//unless in a string or comment
 					if(charClass == -1){
-						state = 52;
+						if (state == 14)	//if at end of comment, accept the state
+							state = -1;
+						else if (state == 13) //if in a comment, keep going
+							state = 13;
+						else if (state == 34) //if in a String, keep going
+							state = 34;
+						else
+							state = 98;
 					}else{
 						state = nextState[state][charClass];
 					}
@@ -467,7 +474,7 @@ public class Scanner {
 	}
 	
 	public static String isRes(String s){
-		if(s.equals("class") || s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while") || s.equals("String") || s.equals("return") || s.equals("length")){
+		if(s.equals("class") || s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while") || s.equals("String") || s.equals("return") || s.equals("length") || s.equals("true") || s.equals("false") || s.equals("this")){
 			return s.toUpperCase();
 		}else{
 			return "";
