@@ -85,7 +85,7 @@ public class Scanner {
 						else if (state == 34) //if in a String, keep going
 							state = 34;
 						else
-							state = 98;
+							charClass = 52;
 					}else{
 						state = nextState[state][charClass];
 					}
@@ -271,7 +271,7 @@ public class Scanner {
 								}
 								else if(states[state].charAt(states[state].length()-1) == '('){
 									System.out.println(states[state] + token_value.substring(0,token_value.length()-sinceLastFinal) + ")");
-								}else if(state != 14 && state != 100){
+								}else if(state != 14){
 									System.out.println(states[state]);
 								}
 								
@@ -283,7 +283,13 @@ public class Scanner {
 							token_value = "";
 							done = true;
 						}
-						
+
+						if (state == 100){
+							System.out.println(states[state]);
+							state = 0;
+							token_value = "";
+							done = true;
+						}
 						
 					}else{
 						counter++;
@@ -328,7 +334,7 @@ public class Scanner {
 				}
 			}
 			
-			if(state == 104 || state == 103){
+			if(state == 104 || state == 103 || state == 100){
 				
 					System.out.println(states[state]);
 				
@@ -356,9 +362,9 @@ public class Scanner {
 			if((int)c == (int)'0')
 				return 0;
 			else if ((int)c >= (int)'1'&&(int)c <= (int)'7')
-				return 1;
-			else if ((int)c >= (int)'1'&&(int)c <= (int)'9')
 				return 2;
+			else if ((int)c >= (int)'1'&&(int)c <= (int)'9')
+				return 1;
 			else
 				return -1;
 		}
@@ -474,7 +480,7 @@ public class Scanner {
 	}
 	
 	public static String isRes(String s){
-		if(s.equals("class") || s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while") || s.equals("String") || s.equals("return") || s.equals("length") || s.equals("true") || s.equals("false") || s.equals("this")){
+		if(s.equals("class") || s.equals("static")|| s.equals("public") || s.equals("main") || s.equals("extends") || s.equals("void") || s.equals("int") || s.equals("boolean") || s.equals("if") || s.equals("while") || s.equals("String") || s.equals("return") || s.equals("length") || s.equals("true") || s.equals("false") || s.equals("this")){
 			return s.toUpperCase();
 		}else{
 			return "";
@@ -507,8 +513,8 @@ public class Scanner {
 		nextState = new int[][]{
 //0		 0	1-9	1-7  .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p  r   s   t   u    w  y   z  a-f  ,   &  |  ^  ~  +   -
 		{24, 1,  1, 23, 39, 28, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 36, 39, 39, 39, 40, 39, 39, 39, 39, 39, 39, 22, 3, 4, 5, 6, 9, 10, 
-//			*   /   !   (    )   [   ]   {   } \n  [space]   \t  =   "   <   >  _
-			11, 12, 15, 16, 17, 18, 19, 20, 21, 0, 0, 0, 32, 34, 39, 30, 98, 102, 98},
+//			*   /   !   (    )   [   ]   {   } \n  [space]   \t  =   "   <   >    _   ;   ivd
+			11, 12, 15, 16, 17, 18, 19, 20, 21, 0,   0,       0, 32, 34, 29, 30, 98, 102, 98},
 			
 //1		 0	1-9	1-7 .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p  r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
 	   	{1, 1,  1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
@@ -626,14 +632,14 @@ public class Scanner {
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 			
 //24	0	1-9	 1-7 .    x   X  A-F a-z  A-Z a   c   d   e   h   i   l   n   o   p   r   s   t   u    w  y   z  a-f  ,   &   |   ^   ~   +   -
-		{26, 26, -1, 2, 25, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+		{26, 101, 26, 2, 25, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 //		*   /   !   (    )   [   ]   {   }   \n  [space]  \t   =   "   <   > _
 		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 99, -1, 99},
 				
 //25	 0	1-9	 1-7 .    x    X   A-F a-z  A-Z   a   c   d   e   h    i    l    n     o   p    r    s    t    u    w     y   z   a-f  ,   &   |   ^   ~   +   -
 		{27, 27, 27, -1, 100, 100, 27, 100, 100, 27, 27, 27, 27, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 27, -1, -1, -1, -1, -1, -1, -1, 
 //		*   /   !   (    )   [   ]   {   }   \n  [space]  \t   =   "   <   > _
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 100, -1, 100},
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, 100,  100,   100, -1, -1, -1, -1, 100, -1, 100},
 		
 //26	 0	1-9	 1-7   .   x    X   A-F  a-z  A-Z   a    c    d    e    h    i    l    n     o   p    r    s    t    u    w     y   z   a-f  ,   &   |   ^   ~   +   -
 		{26, 101, 26, -1, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101, -1, -1, -1, -1, -1, -1, -1, 
@@ -989,7 +995,7 @@ public class Scanner {
 //96	0 1-9 1-7  .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p    r   s   t   u  w    y  z  a-f  ,   &  |  ^  ~  +   -
 		{95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95,
 //		*   /   !   (    )   [   ]   {   }   \n  [space]  \t   =   "   <   > _
-		95, 97, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95},
+		96, 97, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95},
 		
 //97	0 1-9 1-7  .  x   X  A-F a-z  A-Z a   c   d   e    h   i   l   n   o   p    r   s   t   u  w    y  z  a-f  ,   &  |  ^  ~  +   -
 		{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
